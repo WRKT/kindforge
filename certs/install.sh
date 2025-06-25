@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -euo pipefail
+
+source ./bootstrap.env
+
+mkdir -p certs
+cd certs
+
+if ! command -v mkcert >/dev/null 2>&1; then
+  echo "[!] mkcert is not installed. Install it from https://github.com/FiloSottile/mkcert#installation"
+  exit 1
+fi
+
+mkcert -install
+
+mkcert -cert-file tls.crt -key-file tls.key "*.${DOMAIN}"
+
+cp "$(mkcert -CAROOT)/rootCA.pem" ./rootCA.pem
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  echo "[+] Adding CA to system trust store"
+  sudo cp rootCA.pem /usr/local/share/ca-certificates/mkcert-ca.crt
+  sudo update-ca-certificates
+fi
+
+echo "[OK] Certificates are generated successfully"

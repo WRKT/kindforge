@@ -10,7 +10,10 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-18s %s\n", $$1, $$2}'
 
-check: ## Check for required tools
+prepare: ## Install binary prerequisites
+	@./scripts/install-prerequisites.sh
+
+check: prepare ## Check for required tools
 	@./scripts/check-requirements.sh
 
 bootstrap: check ## Run full bootstrap workflow (Kind, TLS, cert-manager, Ingress, Prometheus)

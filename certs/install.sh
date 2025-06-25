@@ -8,7 +8,7 @@ mkdir -p certs
 cd certs
 
 if ! command -v mkcert >/dev/null 2>&1; then
-  echo "[!] mkcert is not installed. Install it from https://github.com/FiloSottile/mkcert#installation"
+  echo "[!] mkcert is not installed. Install it with `apt install -y mkcert`"
   exit 1
 fi
 

@@ -1,13 +1,17 @@
 global:
   edition: ce
   hosts:
-    domain: gitlab.test-cl01.local
+    domain: test-cl01.local
     externalIP: 127.0.0.1
 
   ingress:
+    class: nginx
     configureCertmanager: false
     annotations:
       cert-manager.io/cluster-issuer: local-ca-issuer
+    tls:
+      enabled: true
+
 
   certmanager-issuer:
     email: dev@localhost
@@ -21,3 +25,33 @@ redis:
 certmanager:
   installCRDs: false
   install: false
+
+nginx-ingress:
+  enabled: false
+
+prometheus:
+  install: false
+
+gitlab:
+  kas:
+    ingress:
+      tls:
+        secretName: kas-ca-key
+  webservice:
+    ingress:
+      tls:
+        secretName: webservice-ca-key
+
+registry:
+  ingress:
+    tls:
+      secretName: registry-ca-key 
+
+minio:
+  ingress:
+    tls:
+      secretName: minio-ca-key
+
+gitlab-runner:
+  runners:
+    privileged: true

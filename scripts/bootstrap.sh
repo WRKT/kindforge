@@ -1,14 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
+set -a
 source ./bootstrap.env
+set +a
 
 echo "Bootstrapping Kind cluster: $CLUSTER_NAME"
 
 echo "[!] Check system requirements"
 ./scripts/check-requirements.sh
 
-echo "[1/8] Creating Kind cluster"
+echo "[1/8] Creating Kind cluster: $CLUSTER_NAME"
 envsubst < cluster/config.yaml | kind create cluster --config=-
 
 echo "[2/8] Installing Cilium CNI"

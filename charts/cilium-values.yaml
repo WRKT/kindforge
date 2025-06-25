@@ -1,5 +1,2 @@
-kubeProxyReplacement: strict
-hostServices:
-  enabled: false
-externalIPs:
+kubeProxy:
   enabled: true

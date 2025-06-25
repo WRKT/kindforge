@@ -4,6 +4,10 @@ controller:
   ingressClass: nginx
   kind: DaemonSet
   hostNetwork: true
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
   metrics:
     enabled: true
     serviceMonitor:

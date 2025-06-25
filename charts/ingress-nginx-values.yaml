@@ -1,0 +1,15 @@
+controller:
+  ingressClassResource:
+    name: nginx
+  ingressClass: nginx
+  kind: DaemonSet
+  hostNetwork: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  config:
+    enable-underscores-in-headers: true
+    hsts: "false"
+  service:
+    type: ClusterIP

@@ -1,0 +1,5 @@
+kubeProxyReplacement: strict
+hostServices:
+  enabled: false
+externalIPs:
+  enabled: true

@@ -1,0 +1,23 @@
+global:
+  edition: ce
+  hosts:
+    domain: gitlab.test-cl01.local
+    externalIP: 127.0.0.1
+
+  ingress:
+    configureCertmanager: false
+    annotations:
+      cert-manager.io/cluster-issuer: local-ca-issuer
+
+  certmanager-issuer:
+    email: dev@localhost
+
+postgresql:
+  install: true
+
+redis:
+  install: true
+
+certmanager:
+  installCRDs: false
+  install: false

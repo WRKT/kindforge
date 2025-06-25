@@ -40,7 +40,7 @@ kubectl wait --for=condition=Available --timeout=60s deployment/cert-manager -n 
 echo "[5/8] Creating mkcert CA secret"
 kubectl create secret tls mkcert-ca-secret \
   --cert=certs/rootCA.pem \
-  --key=certs/rootCA.pem \
+  --key=certs/rootCA-key.pem \
   -n cert-manager \
   --dry-run=client -o yaml | kubectl apply -f -
 

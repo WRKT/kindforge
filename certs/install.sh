@@ -14,9 +14,8 @@ fi
 
 mkcert -install
 
-mkcert -cert-file tls.crt -key-file tls.key "*.${DOMAIN}"
-
 cp "$(mkcert -CAROOT)/rootCA.pem" ./rootCA.pem
+cp "$(mkcert -CAROOT)/rootCA-key.pem" ./rootCA-key.pem
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   echo "[+] Adding CA to system trust store"

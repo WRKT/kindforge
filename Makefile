@@ -40,10 +40,11 @@ ingress: ## Reinstall Ingress-NGINX
 	  -f charts/ingress-nginx-values.yaml
 
 monitoring: ## Reinstall Prometheus + Grafana
-	@helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
-	  --namespace monitoring \
-	  --create-namespace \
-	  -f charts/prometheus-stack-values.yaml
+	@envsubst < charts/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring \
+  --create-namespace \
+  -f -
+
 
 status: ## Show current cluster state
 	@kubectl get nodes

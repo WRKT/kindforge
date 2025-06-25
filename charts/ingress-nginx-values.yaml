@@ -8,10 +8,6 @@ controller:
     - key: "node-role.kubernetes.io/control-plane"
       operator: "Exists"
       effect: "NoSchedule"
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: true
   config:
     enable-underscores-in-headers: true
     hsts: "false"

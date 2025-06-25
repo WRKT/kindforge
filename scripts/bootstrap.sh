@@ -56,12 +56,10 @@ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   -f charts/ingress-nginx-values.yaml
 
 echo "[8/8] Installing Prometheus + Grafana"
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+envsubst < charts/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
   --create-namespace \
-  -f charts/prometheus-stack-values.yaml
+  -f -
 
 echo "[OK] Cluster '$CLUSTER_NAME' is now ready with Cilium, TLS, Ingress, and monitoring stack."
 

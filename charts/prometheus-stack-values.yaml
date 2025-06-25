@@ -1,0 +1,35 @@
+alertmanager:
+  enabled: true
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 24h
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: 250m
+
+grafana:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.${DOMAIN}
+    tls:
+      - hosts:
+          - grafana.${DOMAIN}
+        secretName: grafana-tls
+    annotations:
+      cert-manager.io/cluster-issuer: ${CLUSTER_ISSUER_NAME}
+  adminUser: admin
+  adminPassword: admin
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+

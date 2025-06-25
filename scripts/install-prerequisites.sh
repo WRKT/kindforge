@@ -67,6 +67,20 @@ install_make() {
   fi
 }
 
+install_k9s() {
+  if ! command -v k9s &> /dev/null; then
+    echo "[+] Installing k9s..."
+    K9S_VERSION=$(curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep tag_name | cut -d '"' -f 4)
+    curl -Lo k9s.tar.gz "https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_amd64.tar.gz"
+    tar -xzf k9s.tar.gz k9s
+    chmod +x k9s
+    sudo mv k9s /usr/local/bin/
+    rm k9s.tar.gz
+  else
+    echo "[✓] k9s is already installed"
+  fi
+}
+
 main() {
   install_docker
   install_kind
@@ -74,6 +88,7 @@ main() {
   install_helm
   install_mkcert
   install_make
+  install_k9s
   echo "[OK] All prerequisites are installed"
 }
 

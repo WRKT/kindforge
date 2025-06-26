@@ -2,7 +2,6 @@ global:
   edition: ce
   hosts:
     domain: test-cl01.local
-    externalIP: 127.0.0.1
 
   ingress:
     class: nginx
@@ -11,7 +10,6 @@ global:
       cert-manager.io/cluster-issuer: local-ca-issuer
     tls:
       enabled: true
-
 
   certmanager-issuer:
     email: dev@localhost
@@ -51,7 +49,3 @@ minio:
   ingress:
     tls:
       secretName: minio-ca-key
-
-gitlab-runner:
-  runners:
-    privileged: true

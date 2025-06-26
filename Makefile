@@ -27,23 +27,23 @@ tls: ## Regenerate mkcert TLS
 
 certs: ## Reapply cert-manager CA secret + ClusterIssuer
 	@kubectl create secret tls mkcert-ca-secret \
-	  --cert=certs/rootCA.pem \
-	  --key=certs/rootCA.pem \
-	  -n cert-manager \
-	  --dry-run=client -o yaml | kubectl apply -f -
+		--cert=certs/rootCA.pem \
+		--key=certs/rootCA.pem \
+		-n cert-manager \
+		--dry-run=client -o yaml | kubectl apply -f -
 	@envsubst < yamls/clusterissuer.yaml.tpl | kubectl apply -f -
 
 ingress: ## Reinstall Ingress-NGINX
 	@helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-	  --namespace ingress-nginx \
-	  --create-namespace \
-	  -f charts/ingress-nginx-values.yaml
+		--namespace ingress-nginx \
+		--create-namespace \
+		-f charts/ingress-nginx-values.yaml
 
 monitoring: ## Reinstall Prometheus + Grafana
 	@envsubst < charts/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
-  --namespace monitoring \
-  --create-namespace \
-  -f -
+		--namespace monitoring \
+		--create-namespace \
+		-f -
 
 status: ## Show current cluster state
 	@kubectl get nodes
@@ -53,10 +53,10 @@ logs: ## Show Ingress controller logs
 	@kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller -f --tail=100
 
 gitlab: ## Install/Reinstall Gitlab instance
-		helm repo add gitlab https://charts.gitlab.io/ || true
-		helm repo update
-		helm upgrade --install gitlab gitlab/gitlab --namespace gitlab --create-namespace \
-      --version 8.11.2 \
-      --timeout 900s \
-      -f apps/gitlab/values.yaml
+	@helm repo add --force-update gitlab https://charts.gitlab.io/ || true
+	@helm repo update
+	@helm upgrade --install gitlab gitlab/gitlab --namespace gitlab --create-namespace \
+    	--version 8.11.2 \
+    	--timeout 900s \
+    	-f apps/gitlab/values.yaml
 

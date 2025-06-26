@@ -60,3 +60,7 @@ gitlab: ## Install/Reinstall Gitlab instance
     	--timeout 900s \
     	-f apps/gitlab/values.yaml
 
+opencost: ## Install Opencost
+	@helm repo add opencost-charts https://opencost.github.io/opencost-helm-chart
+	@helm repo update
+	@helm upgrade --install opencost opencost-charts/opencost --namespace opencost --create-namespace -f apps/opencost/values.yaml

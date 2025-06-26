@@ -7,14 +7,11 @@ set +a
 
 echo "Bootstrapping Kind cluster: $CLUSTER_NAME"
 
-echo "[!] Check system requirements"
-./scripts/check-requirements.sh
-
 echo "[1/8] Creating Kind cluster: $CLUSTER_NAME"
 envsubst < cluster/config.yaml | kind create cluster --config=-
 
 echo "[2/8] Installing Cilium CNI"
-helm repo add cilium https://helm.cilium.io/
+helm repo add --force-update cilium https://helm.cilium.io/
 helm repo update
 helm upgrade --install cilium cilium/cilium \
   --namespace kube-system \
@@ -27,7 +24,7 @@ echo "[3/8] Generating TLS with mkcert"
 ./certs/install.sh
 
 echo "[4/8] Installing cert-manager"
-helm repo add jetstack https://charts.jetstack.io
+helm repo add --force-update jetstack https://charts.jetstack.io
 helm repo update
 helm upgrade --install cert-manager jetstack/cert-manager \
   --namespace cert-manager \
@@ -48,7 +45,7 @@ echo "[6/8] Creating ClusterIssuer"
 envsubst < yamls/clusterissuer.yaml.tpl | kubectl apply -f -
 
 echo "[7/8] Installing Ingress-NGINX"
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add --force-update ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \

@@ -1,6 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+set -a
+source ./bootstrap.env
+set +a
+
 echo "[*] Checking and installing prerequisites..."
 
 install_docker() {
@@ -28,7 +32,7 @@ install_kind() {
 install_kubectl() {
   if ! command -v kubectl &> /dev/null; then
     echo "[+] Installing kubectl..."
-    curl -LO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    curl -LO "https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/amd64/kubectl"
     chmod +x kubectl
     sudo mv kubectl /usr/local/bin/
   else

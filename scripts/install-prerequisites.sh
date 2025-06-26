@@ -52,7 +52,6 @@ install_mkcert() {
     curl -Lo mkcert https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-linux-amd64
     chmod +x mkcert
     sudo mv mkcert /usr/local/bin/
-    mkcert -install
   else
     echo "[✓] mkcert is already installed"
   fi

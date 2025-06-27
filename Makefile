@@ -59,6 +59,6 @@ opencost: ## Install Opencost
 	@helm upgrade --install opencost opencost-charts/opencost --namespace opencost --create-namespace -f apps/opencost/values.yaml
 
 kubecost: ## Install kubecost
-	@helm repo add --force-update kubecost https://kubecost.github.io/cost-analyze/
+	@helm repo add --force-update kubecost https://kubecost.github.io/cost-analyzer/
 	@helm repo update
 	@helm upgrade --install kubecost kubecost/cost-analyzer -n kubecost --create-namespace

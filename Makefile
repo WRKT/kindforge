@@ -45,13 +45,6 @@ monitoring: ## Reinstall Prometheus + Grafana
 		--create-namespace \
 		-f -
 
-status: ## Show current cluster state
-	@kubectl get nodes
-	@kubectl get pods -A | grep -E 'cert-manager|ingress|monitoring|grafana|prometheus'
-
-logs: ## Show Ingress controller logs
-	@kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller -f --tail=100
-
 gitlab: ## Install/Reinstall Gitlab instance
 	@helm repo add --force-update gitlab https://charts.gitlab.io/ || true
 	@helm repo update

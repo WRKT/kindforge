@@ -58,6 +58,19 @@ apply_cluster_issuer() {
   envsubst < yamls/clusterissuer.yaml.tpl | kubectl apply -f -
 }
 
+wait_for_ingress_nginx_controller() {
+  log "Waiting for Ingress-NGINX controller to be ready..."
+
+  if kubectl -n ingress-nginx get deployment ingress-nginx-controller &>/dev/null; then
+    kubectl -n ingress-nginx rollout status deployment ingress-nginx-controller --timeout=300s
+  elif kubectl -n ingress-nginx get daemonset ingress-nginx-controller &>/dev/null; then
+    kubectl -n ingress-nginx rollout status daemonset ingress-nginx-controller --timeout=300s
+  else
+    echo "[!] ingress-nginx-controller not found as Deployment or DaemonSet"
+    exit 1
+  fi
+}
+
 install_ingress_nginx() {
   log "Installing Ingress-NGINX"
   helm repo add --force-update ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -66,9 +79,8 @@ install_ingress_nginx() {
     --namespace ingress-nginx \
     --create-namespace \
     -f charts/ingress-nginx-values.yaml
-
-  log "Waiting for Ingress-NGINX to be ready..."
-  kubectl -n ingress-nginx rollout status daemonset ingress-nginx-controller --timeout=300s
+  
+  wait_for_ingress_nginx_controller
 }
 
 install_monitoring_stack() {

@@ -53,9 +53,9 @@ install_mkcert() {
   if ! command -v mkcert &> /dev/null; then
     echo "[+] Installing mkcert..."
     sudo apt install -y libnss3-tools
-    curl -Lo mkcert https://github.com/FiloSottile/mkcert/releases/latest/download/mkcert-linux-amd64
-    chmod +x mkcert
-    sudo mv mkcert /usr/local/bin/
+    curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+    chmod +x mkcert-v*-linux-amd64
+    sudo mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
   else
     echo "[✓] mkcert is already installed"
   fi

@@ -45,13 +45,6 @@ monitoring: ## Reinstall Prometheus + Grafana
 		--create-namespace \
 		-f -
 
-status: ## Show current cluster state
-	@kubectl get nodes
-	@kubectl get pods -A | grep -E 'cert-manager|ingress|monitoring|grafana|prometheus'
-
-logs: ## Show Ingress controller logs
-	@kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller -f --tail=100
-
 gitlab: ## Install/Reinstall Gitlab instance
 	@helm repo add --force-update gitlab https://charts.gitlab.io/ || true
 	@helm repo update
@@ -60,3 +53,7 @@ gitlab: ## Install/Reinstall Gitlab instance
     	--timeout 900s \
     	-f apps/gitlab/values.yaml
 
+opencost: ## Install Opencost
+	@helm repo add opencost-charts https://opencost.github.io/opencost-helm-chart
+	@helm repo update
+	@helm upgrade --install opencost opencost-charts/opencost --namespace opencost --create-namespace -f apps/opencost/values.yaml

@@ -61,9 +61,6 @@ minio:
       secretName: minio-ca-key
 
 gitlab-runner:
+  gitlabUrl: http://gitlab-webservice-default:8080
   runners:
     privileged: true
-    config: |
-      [[runners]]
-        name = "kubernetes-runner"
-        url = "https://gitlab.test-cl01.local/"

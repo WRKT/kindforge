@@ -17,10 +17,16 @@ rvn-usershell:
       database: webapp
   persistence:
     enabled: true
-    storageClass: standard
+    storageClassName: standard
     accessModes:
       - ReadWriteOnce
     size: 5Gi
+  securityContext:
+    allowPrivilegeEscalation: true
+    runAsUser: 1000
+    fsGroup: 1000
+    readOnlyRootFileSystem: false
+
 
 rvn-webrunner:
   enabled: false

@@ -11,7 +11,7 @@ nodes:
         hostPort: 80
       - containerPort: 443
         hostPort: 443
-      - containerPort: 22
+      - containerPort: 30022
         hostPort: 2222
   - role: worker
     image: kindest/node:${K8S_VERSION}

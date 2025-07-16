@@ -2,6 +2,7 @@ global:
   edition: ce
   hosts:
     domain: test-cl01.local
+    ssh: gitlab.test-cl01.local
 
   ingress:
     class: nginx
@@ -13,6 +14,9 @@ global:
 
   certmanager-issuer:
     email: dev@localhost
+
+  shell:
+    port: 22
 
 postgresql:
   install: true
@@ -39,6 +43,12 @@ gitlab:
     ingress:
       tls:
         secretName: webservice-ca-key
+  gitlab-shell:
+    enabled: true
+    service:
+      type: NodePort
+      nodePort: 30022
+    port: 22
 
 registry:
   ingress:
@@ -49,3 +59,8 @@ minio:
   ingress:
     tls:
       secretName: minio-ca-key
+
+gitlab-runner:
+  gitlabUrl: http://gitlab-webservice-default:8080
+  runners:
+    privileged: true

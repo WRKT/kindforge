@@ -1,0 +1,5 @@
+# Add this to your ~/.ssh/config file
+Host gitlab.test-cl01.local
+    Port 2222
+    User git
+    HostName gitlab.test-cl01.local

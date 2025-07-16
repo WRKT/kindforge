@@ -20,7 +20,7 @@ install_cilium() {
   helm repo update
   helm upgrade --install cilium cilium/cilium \
     --namespace kube-system \
-    -f charts/cilium-values.yaml
+    -f defaults/cilium-values.yaml
 
   log "Waiting for Cilium pods to be ready..."
   kubectl -n kube-system rollout status daemonset/cilium --timeout=120s
@@ -78,14 +78,14 @@ install_ingress_nginx() {
   helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
     --namespace ingress-nginx \
     --create-namespace \
-    -f charts/ingress-nginx-values.yaml
+    -f defaults/ingress-nginx-values.yaml
   
   wait_for_ingress_nginx_controller
 }
 
 install_monitoring_stack() {
   log "Installing Prometheus + Grafana"
-  envsubst < charts/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+  envsubst < defaults/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
     --namespace monitoring \
     --create-namespace \
     -f -

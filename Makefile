@@ -37,10 +37,10 @@ ingress: ## Reinstall Ingress-NGINX
 	@helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
 		--namespace ingress-nginx \
 		--create-namespace \
-		-f charts/ingress-nginx-values.yaml
+		-f defaults/ingress-nginx-values.yaml
 
 monitoring: ## Reinstall Prometheus + Grafana
-	@envsubst < charts/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+	@envsubst < defaults/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
 		--namespace monitoring \
 		--create-namespace \
 		-f -

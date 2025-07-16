@@ -2,7 +2,6 @@ credentials:
   existingSecret: cloud-credentials
 
 configuration:
-  provider: aws
   backupStorageLocation:
     - name: default
       provider: aws
@@ -24,3 +23,4 @@ initContainers:
       - mountPath: /target
         name: plugins
 
+deployNodeAgent: true

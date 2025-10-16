@@ -2,7 +2,7 @@ include bootstrap.env
 
 .DEFAULT_GOAL := help
 
-.PHONY: help gitlab
+.PHONY: help gitlab velero
 help:
 	@echo "Usage: make <target>"
 	@echo ""
@@ -46,12 +46,36 @@ monitoring: ## Reinstall Prometheus + Grafana
 		-f -
 
 gitlab: ## Install/Reinstall Gitlab instance
+	@echo "Installing GitLab via Helm..."
 	@helm repo add --force-update gitlab https://charts.gitlab.io/ || true
 	@helm repo update
-	@helm upgrade --install gitlab gitlab/gitlab --namespace gitlab --create-namespace \
-    	--version 8.11.2 \
-    	--timeout 900s \
-    	-f apps/gitlab/values.yaml
+	@helm upgrade --install gitlab gitlab/gitlab \
+	  --namespace gitlab \
+	  --create-namespace \
+	  --timeout 900s \
+	  -f sample/gitlab/values.yaml
+
+velero: ## Install Velero server
+	@echo "Installing MinIO via Helm..."
+	@helm repo add --force-update minio https://charts.min.io/ || true
+	@helm repo update
+	@helm upgrade --install minio minio/minio \
+	  --namespace minio \
+	  --create-namespace \
+	  -f defaults/minio-values.yaml
+
+	@echo "Installing Velero via Helm..."
+	@helm repo add --force-update vmware-tanzu https://vmware-tanzu.github.io/helm-charts || true
+	@helm repo update
+	@helm upgrade --install velero vmware-tanzu/velero \
+	  --namespace velero \
+	  --create-namespace \
+	  -f sample/velero/values.yaml
+
+velero-clean: ## Uninstall Velero and MinIO (and delete MinIO PVCs)
+	@helm uninstall velero -n velero || true
+	@helm uninstall minio -n minio || true
+	@kubectl delete pvc --all -n minio || true
 
 opencost: ## Install Opencost
 	@helm repo add opencost-charts https://opencost.github.io/opencost-helm-chart

@@ -8,13 +8,13 @@ configuration:
       bucket: velero
       config:
         region: minio
-        s3ForcePathStyle: "true"
-        s3Url: http://minio:9000
+        s3Url: http://minio.minio.svc.cluster.local:9000
   volumeSnapshotLocation:
     - name: default
       provider: aws
       config:
         region: minio
+        s3Url: http://minio.minio.svc.cluster.local:9000
 
 initContainers:
   - name: velero-plugin-for-aws
@@ -23,4 +23,20 @@ initContainers:
       - mountPath: /target
         name: plugins
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 deployNodeAgent: true
+=======
+=======
+>>>>>>> Stashed changes
+credentials:
+  secretContents:
+    cloud: |
+      [default]
+      aws_access_key_id=minioadmin
+      aws_secret_access_key=minioadmin
+
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes

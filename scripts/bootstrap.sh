@@ -55,7 +55,7 @@ create_ca_secret() {
 
 apply_cluster_issuer() {
   log "Creating ClusterIssuer"
-  envsubst < yamls/clusterissuer.yaml | kubectl apply -f -
+  envsubst < defaults/clusterissuer.yaml | kubectl apply -f -
 }
 
 wait_for_ingress_nginx_controller() {

@@ -1,14 +1,14 @@
 global:
   edition: ce
   hosts:
-    domain: test-cl01.local
-    ssh: gitlab.test-cl01.local
+    domain: ${DOMAIN}
+    ssh: gitlab.${DOMAIN}
 
   ingress:
     class: nginx
     configureCertmanager: false
     annotations:
-      cert-manager.io/cluster-issuer: local-ca-issuer
+      cert-manager.io/cluster-issuer: ${CLUSTER_ISSUER_NAME}
     tls:
       enabled: true
 

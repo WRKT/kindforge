@@ -1,0 +1,6 @@
+# Add this to your ~/.ssh/config file
+# Replace ${DOMAIN} if not using envsubst
+Host gitlab.${DOMAIN}
+    Port 2222
+    User git
+    HostName gitlab.${DOMAIN}

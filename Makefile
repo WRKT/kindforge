@@ -86,18 +86,6 @@ velero-clean: ## Uninstall Velero and MinIO
 	@helm uninstall minio -n minio || true
 	@kubectl delete pvc --all -n minio || true
 
-opencost: ## Install Opencost (requires values file at tools/opencost/values.yaml)
-	@helm repo add opencost-charts https://opencost.github.io/opencost-helm-chart
-	@helm repo update
-	@if [ -f $(TOOLS_DIR)/opencost/values.yaml ]; then \
-	  helm upgrade --install opencost opencost-charts/opencost \
-	    --namespace opencost \
-	    --create-namespace \
-	    -f $(TOOLS_DIR)/opencost/values.yaml; \
-	else \
-	  echo "[WARN] Missing $(TOOLS_DIR)/opencost/values.yaml. Create it to customize the deployment."; \
-	fi
-
 lint: ## Lint shell scripts (requires shellcheck)
 	@if command -v shellcheck >/dev/null 2>&1; then \
 	  echo "[+] Running shellcheck..."; \

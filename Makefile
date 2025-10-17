@@ -8,7 +8,7 @@ TOOLS_DIR := tools
 
 .DEFAULT_GOAL := help
 
-.PHONY: help gitlab velero prepare check bootstrap delete tls certs ingress monitoring velero-clean opencost lint print-config
+.PHONY: help gitlab velero prepare check bootstrap delete tls certs ingress monitoring velero-clean lint print-config
 help:
 	@echo "Usage: make <target>"
 	@echo ""

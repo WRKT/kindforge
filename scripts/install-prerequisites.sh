@@ -11,7 +11,7 @@ install_docker() {
   if ! command -v docker &> /dev/null; then
     echo "[+] Installing Docker..."
     curl -fsSL https://get.docker.com | sh -
-    sudo usermod -aG docker $USER
+    sudo usermod -aG docker "$USER"
     echo "[!] Docker installed. You may need to logout/login or run 'newgrp docker'"
   else
     echo "[✓] Docker is already installed"

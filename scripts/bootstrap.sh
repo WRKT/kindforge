@@ -85,6 +85,8 @@ install_ingress_nginx() {
 
 install_monitoring_stack() {
   log "Installing Prometheus + Grafana"
+  helm repo add --force-update prometheus-community https://prometheus-community.github.io/helm-charts
+  helm repo update
   envsubst < defaults/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
     --namespace monitoring \
     --create-namespace \

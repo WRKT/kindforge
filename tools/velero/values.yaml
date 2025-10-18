@@ -1,0 +1,37 @@
+# Default values for velero.yaml
+# This is a YAML-formatted file.
+
+configuration:
+  backupStorageLocation:
+    - name: default
+      provider: aws
+      bucket: velero
+      config:
+        region: minio
+        s3Url: http://minio.minio.svc.cluster.local:9000
+        s3ForcePathStyle: true
+  volumeSnapshotLocation:
+    - name: default
+      provider: aws
+      config:
+        region: minio
+        s3Url: http://minio.minio.svc.cluster.local:9000
+        s3ForcePathStyle: true
+
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.12.1
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+deployNodeAgent: true
+
+credentials:
+  name: bucket-credentials
+  secretContents:
+    cloud: |
+      [default]
+      aws_access_key_id=minioadmin
+      aws_secret_access_key=minioadmin
+

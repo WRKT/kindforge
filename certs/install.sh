@@ -7,7 +7,7 @@ source ./bootstrap.env
 mkdir -p certs
 
 if ! command -v mkcert >/dev/null 2>&1; then
-  echo "[!] mkcert is not installed. Install it with `apt install -y mkcert`"
+  echo "[!] mkcert is not installed. Install it with 'apt install -y mkcert'"
   exit 1
 fi
 

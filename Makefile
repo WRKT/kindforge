@@ -1,8 +1,14 @@
 include bootstrap.env
 
+SCRIPTS_DIR := scripts
+CERTS_DIR := certs
+DEFAULTS_DIR := defaults
+CLUSTER_DIR := cluster
+TOOLS_DIR := tools
+
 .DEFAULT_GOAL := help
 
-.PHONY: help gitlab
+.PHONY: help gitlab velero prepare check bootstrap delete tls certs ingress monitoring velero-clean lint print-config
 help:
 	@echo "Usage: make <target>"
 	@echo ""
@@ -11,49 +17,42 @@ help:
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-18s %s\n", $$1, $$2}'
 
 prepare: ## Install binary prerequisites
-	@./scripts/install-prerequisites.sh
+	@$(SCRIPTS_DIR)/install-prerequisites.sh
 
 check: prepare ## Check for required tools
-	@./scripts/check-requirements.sh
+	@$(SCRIPTS_DIR)/check-requirements.sh
 
-bootstrap: check ## Run full bootstrap workflow (Kind, TLS, cert-manager, Ingress, Prometheus)
-	@./scripts/bootstrap.sh
+install: check ## Run full bootstrap workflow
+	@$(SCRIPTS_DIR)/bootstrap.sh
 
 delete: ## Delete the cluster
 	@kind delete cluster --name $(CLUSTER_NAME)
 
 tls: ## Regenerate mkcert TLS
-	@./certs/install.sh
-
-certs: ## Reapply cert-manager CA secret + ClusterIssuer
-	@kubectl create secret tls mkcert-ca-secret \
-		--cert=certs/rootCA.pem \
-		--key=certs/rootCA.pem \
-		-n cert-manager \
-		--dry-run=client -o yaml | kubectl apply -f -
-	@envsubst < yamls/clusterissuer.yaml.tpl | kubectl apply -f -
-
-ingress: ## Reinstall Ingress-NGINX
-	@helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-		--namespace ingress-nginx \
-		--create-namespace \
-		-f defaults/ingress-nginx-values.yaml
-
-monitoring: ## Reinstall Prometheus + Grafana
-	@envsubst < defaults/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
-		--namespace monitoring \
-		--create-namespace \
-		-f -
+	@$(CERTS_DIR)/install.sh
 
 gitlab: ## Install/Reinstall Gitlab instance
-	@helm repo add --force-update gitlab https://charts.gitlab.io/ || true
-	@helm repo update
-	@helm upgrade --install gitlab gitlab/gitlab --namespace gitlab --create-namespace \
-    	--version 8.11.2 \
-    	--timeout 900s \
-    	-f apps/gitlab/values.yaml
+	@$(SCRIPTS_DIR)/install-gitlab.sh
 
-opencost: ## Install Opencost
-	@helm repo add opencost-charts https://opencost.github.io/opencost-helm-chart
-	@helm repo update
-	@helm upgrade --install opencost opencost-charts/opencost --namespace opencost --create-namespace -f apps/opencost/values.yaml
+velero: ## Install Velero server
+	@$(SCRIPTS_DIR)/install-velero.sh
+
+velero-clean: ## Uninstall Velero and MinIO
+	@helm uninstall velero -n velero || true
+	@helm uninstall minio -n minio || true
+	@kubectl delete pvc --all -n minio || true
+
+lint: ## Lint shell scripts (requires shellcheck)
+	@if command -v shellcheck >/dev/null 2>&1; then \
+	  echo "[+] Running shellcheck..."; \
+	  shellcheck -x $(SCRIPTS_DIR)/*.sh $(CERTS_DIR)/install.sh; \
+	else \
+	  echo "[WARN] shellcheck not found. Install it to lint scripts (e.g., apt install -y shellcheck)"; \
+	fi
+
+print-config: ## Show effective configuration from bootstrap.env
+	@echo "K8S_VERSION=$(K8S_VERSION)"; \
+	echo "CLUSTER_NAME=$(CLUSTER_NAME)"; \
+	echo "DOMAIN=$(DOMAIN)"; \
+	echo "CLUSTER_ISSUER_NAME=$(CLUSTER_ISSUER_NAME)"; \
+	echo "CA_SECRET_NAME=$(CA_SECRET_NAME)"

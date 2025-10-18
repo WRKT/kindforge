@@ -28,7 +28,7 @@ It is designed for Kubernetes enthusias, and developers who want:
 ```shell
 git clone https://github.com/WRKT/kindforge.git
 cd kindforge
-make bootstrap
+make install
 ```
 
 ## Trust the Local CA Certificate (Windows)

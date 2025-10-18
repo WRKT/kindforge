@@ -22,7 +22,7 @@ prepare: ## Install binary prerequisites
 check: prepare ## Check for required tools
 	@$(SCRIPTS_DIR)/check-requirements.sh
 
-bootstrap: check ## Run full bootstrap workflow (Kind, TLS, cert-manager, Ingress, Prometheus)
+install: check ## Run full bootstrap workflow (Kind, TLS, cert-manager, Ingress, Prometheus)
 	@$(SCRIPTS_DIR)/bootstrap.sh
 
 delete: ## Delete the cluster

@@ -22,7 +22,7 @@ prepare: ## Install binary prerequisites
 check: prepare ## Check for required tools
 	@$(SCRIPTS_DIR)/check-requirements.sh
 
-install: check ## Run full bootstrap workflow (Kind, TLS, cert-manager, Ingress, Prometheus)
+install: check ## Run full bootstrap workflow
 	@$(SCRIPTS_DIR)/bootstrap.sh
 
 delete: ## Delete the cluster
@@ -31,55 +31,11 @@ delete: ## Delete the cluster
 tls: ## Regenerate mkcert TLS
 	@$(CERTS_DIR)/install.sh
 
-certs: ## Reapply cert-manager CA secret + ClusterIssuer
-	@kubectl create secret tls mkcert-ca-secret \
-		--cert=$(CERTS_DIR)/rootCA.pem \
-		--key=$(CERTS_DIR)/rootCA-key.pem \
-		-n cert-manager \
-		--dry-run=client -o yaml | kubectl apply -f -
-	@envsubst < $(DEFAULTS_DIR)/clusterissuer.yaml | kubectl apply -f -
-
-ingress: ## Reinstall Ingress-NGINX
-	@helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-		--namespace ingress-nginx \
-		--create-namespace \
-		-f $(DEFAULTS_DIR)/ingress-nginx-values.yaml
-
-monitoring: ## Reinstall Prometheus + Grafana
-	@echo "Installing Prometheus and Grafana via Helm..."
-	@helm repo add --force-update prometheus-community https://prometheus-community.github.io/helm-charts
-	@helm repo update
-	@envsubst < $(DEFAULTS_DIR)/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
-		--namespace monitoring \
-		--create-namespace \
-		-f -
-
 gitlab: ## Install/Reinstall Gitlab instance
-	@echo "Installing GitLab via Helm..."
-	@helm repo add --force-update gitlab https://charts.gitlab.io/ || true
-	@helm repo update
-	@envsubst < $(TOOLS_DIR)/gitlab/values.yaml | helm upgrade --install gitlab gitlab/gitlab \
-	  --namespace gitlab \
-	  --create-namespace \
-	  --timeout 900s \
-	  -f -
+	@$(SCRIPTS_DIR)/install-gitlab.sh
 
 velero: ## Install Velero server
-	@echo "Installing MinIO via Helm..."
-	@helm repo add --force-update minio https://charts.min.io/ || true
-	@helm repo update
-	@helm upgrade --install minio minio/minio \
-	  --namespace minio \
-	  --create-namespace \
-	  -f $(TOOLS_DIR)/minio/values.yaml
-
-	@echo "Installing Velero via Helm..."
-	@helm repo add --force-update vmware-tanzu https://vmware-tanzu.github.io/helm-charts || true
-	@helm repo update
-	@helm upgrade --install velero vmware-tanzu/velero \
-	  --namespace velero \
-	  --create-namespace \
-	  -f $(TOOLS_DIR)/velero/values.yaml
+	@$(SCRIPTS_DIR)/install-velero.sh
 
 velero-clean: ## Uninstall Velero and MinIO
 	@helm uninstall velero -n velero || true

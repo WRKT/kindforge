@@ -16,8 +16,8 @@ create_kind_cluster() {
 
 install_cilium() {
   log "Installing Cilium CNI"
-  helm repo add --force-update cilium https://helm.cilium.io/
-  helm repo update
+  helm repo add --force-update cilium https://helm.cilium.io/ >/dev/null 2>&1 || true
+  helm repo update >/dev/null 2>&1 || true
   helm upgrade --install cilium cilium/cilium \
     --namespace kube-system \
     -f defaults/cilium-values.yaml
@@ -33,8 +33,8 @@ generate_tls_certificates() {
 
 install_cert_manager() {
   log "Installing cert-manager"
-  helm repo add --force-update jetstack https://charts.jetstack.io
-  helm repo update
+  helm repo add --force-update jetstack https://charts.jetstack.io >/dev/null 2>&1 || true
+  helm repo update >/dev/null 2>&1 || true
   helm upgrade --install cert-manager jetstack/cert-manager \
     --namespace cert-manager \
     --create-namespace \
@@ -73,8 +73,8 @@ wait_for_ingress_nginx_controller() {
 
 install_ingress_nginx() {
   log "Installing Ingress-NGINX"
-  helm repo add --force-update ingress-nginx https://kubernetes.github.io/ingress-nginx
-  helm repo update
+  helm repo add --force-update ingress-nginx https://kubernetes.github.io/ingress-nginx >/dev/null 2>&1 || true
+  helm repo update >/dev/null 2>&1 || true
   helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
     --namespace ingress-nginx \
     --create-namespace \
@@ -85,8 +85,8 @@ install_ingress_nginx() {
 
 install_monitoring_stack() {
   log "Installing Prometheus + Grafana"
-  helm repo add --force-update prometheus-community https://prometheus-community.github.io/helm-charts
-  helm repo update
+  helm repo add --force-update prometheus-community https://prometheus-community.github.io/helm-charts >/dev/null 2>&1 || true
+  helm repo update >/dev/null 2>&1 || true
   envsubst < defaults/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
     --namespace monitoring \
     --create-namespace \

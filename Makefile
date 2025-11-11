@@ -26,7 +26,7 @@ install: check ## Run full bootstrap workflow
 	@$(SCRIPTS_DIR)/bootstrap.sh
 
 delete: ## Delete the cluster
-	@kind delete cluster --name $(CLUSTER_NAME)
+	@kind delete clusters $(kind get clusters)
 
 tls: ## Regenerate mkcert TLS
 	@$(CERTS_DIR)/install.sh

@@ -1,0 +1,74 @@
+services:
+  api:
+    image: dserio83/velero-api:0.2.7
+    working_dir: /app
+    networks:
+      - kind
+    volumes:
+      - /home/wrkt/.kube/kubeconfig-internal.yaml:/root/.kube/config
+    environment:
+      API_ENDPOINT_URL: "0.0.0.0"
+      API_ENDPOINT_PORT: "8001"
+      API_RATE_LIMITER_L1: "60:200"
+      API_RATE_LIMITER_CUSTOM_1: "Security:xxx:60:20"
+      AUTH_ENABLED: "true"
+      DEFAULT_ADMIN_USERNAME: "admin"
+      DEFAULT_ADMIN_PASSWORD: "admin"
+      API_TOKEN_EXPIRATION_MIN: "180"
+      API_TOKEN_REFRESH_EXPIRATION_DAYS: "7"
+      K8S_IN_CLUSTER_MODE: "False"
+      K8S_VELERO_NAMESPACE: "velero"
+      KUBE_CONFIG_FILE: "/root/.kube/config"
+      ORIGINS_1: "http://127.0.0.1:8003"
+      ORIGINS_2: "http://localhost:8003"
+      CLUSTER_ID: "kindforge-cl01"
+      DOWNLOAD_INSPECT_FOLDER: "/tmp/velero-inspect-backups"
+      RESTIC_PASSWORD: "static-passw0rd"
+      WATCHDOG_URL: "vui-watchdog"
+      WATCHDOG_PORT: "8002"
+      DEBUG_LEVEL: "INFO"
+    ports:
+      - "8001:8001"
+
+  vui-watchdog:
+    image: dserio83/velero-watchdog:0.1.8
+    restart: always
+    working_dir: /app
+    networks:
+      - kind
+    volumes:
+      - /home/wrkt/.kube/kubeconfig-internal.yaml:/root/.kube/config
+    environment:
+      API_ENDPOINT_URL: "0.0.0.0"
+      API_ENDPOINT_PORT: "8002"
+      K8S_IN_CLUSTER_MODE: "false"
+      K8S_VELERO_NAMESPACE: "velero"
+      PROCESS_LOAD_KUBE_CONFIG: "true"
+      PROCESS_KUBE_CONFIG: "/root/.kube/config"
+      CLUSTER_ID: "kindforge-cl01"
+      PROCESS_CYCLE_SEC: "1800"
+      APPRISE: ""
+    ports:
+      - "8002:8002"
+      
+  ui:
+    image: dserio83/velero-ui:0.2.7
+    working_dir: /app
+    networks:
+      - kind
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_REFRESH_DATATABLE_AFTER: "1500"
+      NEXT_PUBLIC_REFRESH_RECENT: "5000"
+      NEXT_PUBLIC_VELERO_API_NAME: "cluster-backend-name"
+      NEXT_PUBLIC_VELERO_API_URL: "http://127.0.0.1:8001/api"
+      NEXT_PUBLIC_VELERO_API_WS: "ws://127.0.0.1:8001"
+      NEXT_PUBLIC_AUTH_ENABLED: "true"
+      NEXT_PUBLIC_INSPECT_BACKUP_ENABLED: "true"
+    ports:
+      - "8003:3000"
+      
+networks: 
+  kind:
+    external: true

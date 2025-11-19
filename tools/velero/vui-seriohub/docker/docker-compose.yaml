@@ -11,6 +11,7 @@ services:
       API_ENDPOINT_PORT: "8001"
       API_RATE_LIMITER_L1: "60:200"
       API_RATE_LIMITER_CUSTOM_1: "Security:xxx:60:20"
+      API_ENABLE_DOCUMENTATION: "true"
       AUTH_ENABLED: "true"
       DEFAULT_ADMIN_USERNAME: "admin"
       DEFAULT_ADMIN_PASSWORD: "admin"

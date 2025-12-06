@@ -8,7 +8,7 @@ TOOLS_DIR := tools
 
 .DEFAULT_GOAL := help
 
-.PHONY: help gitlab velero prepare check bootstrap delete tls certs ingress monitoring velero-clean lint print-config
+.PHONY: help gitlab velero argocd prepare check bootstrap delete tls monitoring velero-clean lint print-config
 help:
 	@echo "Usage: make <target>"
 	@echo ""
@@ -26,7 +26,7 @@ install: check ## Run full bootstrap workflow
 	@$(SCRIPTS_DIR)/bootstrap.sh
 
 delete: ## Delete the cluster
-	@kind delete clusters $(kind get clusters)
+	@kind delete cluster --name $(CLUSTER_NAME)
 
 tls: ## Regenerate mkcert TLS
 	@$(CERTS_DIR)/install.sh
@@ -36,6 +36,12 @@ gitlab: ## Install/Reinstall Gitlab instance
 
 velero: ## Install Velero server
 	@$(SCRIPTS_DIR)/install-velero.sh
+
+argocd: ## Install ArgoCD
+	@$(SCRIPTS_DIR)/install-argocd.sh
+
+monitoring: ## Install Prometheus and Grafana monitoring stack
+	@$(SCRIPTS_DIR)/install-monitoring.sh
 
 velero-clean: ## Uninstall Velero and MinIO
 	@helm uninstall velero -n velero || true

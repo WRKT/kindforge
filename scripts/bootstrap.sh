@@ -9,6 +9,17 @@ log() {
   echo -e "\n[+] $*"
 }
 
+setup_helm_repos() {
+  log "Setting up Helm repositories"
+  helm repo add --force-update cilium https://helm.cilium.io/ >/dev/null 2>&1 || true
+  helm repo add --force-update jetstack https://charts.jetstack.io >/dev/null 2>&1 || true
+  helm repo add --force-update ingress-nginx https://kubernetes.github.io/ingress-nginx >/dev/null 2>&1 || true
+  helm repo add --force-update prometheus-community https://prometheus-community.github.io/helm-charts >/dev/null 2>&1 || true
+
+  log "Updating Helm repositories"
+  helm repo update >/dev/null 2>&1 || true
+}
+
 create_kind_cluster() {
   log "Creating Kind cluster: $CLUSTER_NAME"
   envsubst < cluster/config.yaml | kind create cluster --config=-
@@ -16,8 +27,6 @@ create_kind_cluster() {
 
 install_cilium() {
   log "Installing Cilium CNI"
-  helm repo add --force-update cilium https://helm.cilium.io/ >/dev/null 2>&1 || true
-  helm repo update >/dev/null 2>&1 || true
   helm upgrade --install cilium cilium/cilium \
     --namespace kube-system \
     -f defaults/cilium-values.yaml
@@ -33,8 +42,6 @@ generate_tls_certificates() {
 
 install_cert_manager() {
   log "Installing cert-manager"
-  helm repo add --force-update jetstack https://charts.jetstack.io >/dev/null 2>&1 || true
-  helm repo update >/dev/null 2>&1 || true
   helm upgrade --install cert-manager jetstack/cert-manager \
     --namespace cert-manager \
     --create-namespace \
@@ -73,20 +80,16 @@ wait_for_ingress_nginx_controller() {
 
 install_ingress_nginx() {
   log "Installing Ingress-NGINX"
-  helm repo add --force-update ingress-nginx https://kubernetes.github.io/ingress-nginx >/dev/null 2>&1 || true
-  helm repo update >/dev/null 2>&1 || true
   helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
     --namespace ingress-nginx \
     --create-namespace \
     -f defaults/ingress-nginx-values.yaml
-  
+
   wait_for_ingress_nginx_controller
 }
 
 install_monitoring_stack() {
   log "Installing Prometheus + Grafana"
-  helm repo add --force-update prometheus-community https://prometheus-community.github.io/helm-charts >/dev/null 2>&1 || true
-  helm repo update >/dev/null 2>&1 || true
   envsubst < defaults/prometheus-stack-values.yaml | helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
     --namespace monitoring \
     --create-namespace \
@@ -96,6 +99,7 @@ install_monitoring_stack() {
 main() {
   log "Bootstrapping Kind cluster: $CLUSTER_NAME"
 
+  setup_helm_repos
   create_kind_cluster
   install_cilium
   generate_tls_certificates
@@ -103,9 +107,9 @@ main() {
   create_ca_secret
   apply_cluster_issuer
   install_ingress_nginx
-  install_monitoring_stack
 
-  echo "[OK] Cluster '$CLUSTER_NAME' is now ready with Cilium, TLS, Ingress, and monitoring stack."
+  echo "[OK] Cluster '$CLUSTER_NAME' is now ready with Cilium, TLS, and Ingress."
+  echo "[INFO] To install monitoring stack, run: make monitoring"
 }
 
 main

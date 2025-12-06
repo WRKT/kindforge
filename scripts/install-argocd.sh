@@ -15,11 +15,6 @@ helm upgrade --install argocd argo/argo-cd \
 echo "[+] Waiting for ArgoCD server to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
 
-echo ""
 echo "[OK] ArgoCD installed successfully!"
-echo ""
 echo "Access ArgoCD UI at: https://argocd.kindforge-cl01.io"
-echo ""
-echo "To get the initial admin password, run:"
-echo "  kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath='{.data.password}' | base64 -d && echo"
 echo ""

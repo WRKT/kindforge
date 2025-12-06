@@ -6,7 +6,7 @@ DEFAULTS_DIR := defaults
 CLUSTER_DIR := cluster
 TOOLS_DIR := tools
 
-.DEFAULT_GOAL := help
+.DEFAULT_GOAL := install
 
 .PHONY: help gitlab velero argocd prepare check bootstrap delete tls monitoring velero-clean lint print-config
 help:

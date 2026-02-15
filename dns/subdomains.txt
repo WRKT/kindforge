@@ -1,0 +1,7 @@
+hubble
+grafana
+argocd
+gitlab
+minio
+registry
+kas

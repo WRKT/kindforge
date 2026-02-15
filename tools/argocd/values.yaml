@@ -1,0 +1,66 @@
+# Global settings
+global:
+  domain: argocd.kindforge-cl01.io
+
+# Server configuration
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: local-ca-issuer
+      nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    hosts:
+      - argocd.kindforge-cl01.io
+    tls:
+      - secretName: argocd-server-tls
+        hosts:
+          - argocd.kindforge-cl01.io
+    https: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+repoServer:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 512Mi
+
+redis:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+applicationSet:
+  enabled: false
+
+notifications:
+  enabled: false
+
+configs:
+  params:
+    # Disable TLS on server. Handled by Ingress
+    server.insecure: true

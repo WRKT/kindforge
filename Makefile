@@ -25,8 +25,13 @@ check: prepare ## Check for required tools
 install: check ## Run full bootstrap workflow
 	@$(SCRIPTS_DIR)/bootstrap.sh
 
-delete: ## Delete the cluster
+destroy: ## Delete the cluster
 	@kind delete cluster --name $(CLUSTER_NAME)
+
+clean: destroy ## Delete the cluster and clean up generated certs
+	@echo "Cleaning up local certificates..."
+	@rm -f $(CERTS_DIR)/*.pem
+	@echo "Done."
 
 tls: ## Regenerate mkcert TLS
 	@$(CERTS_DIR)/install.sh

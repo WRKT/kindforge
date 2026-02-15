@@ -1,2 +1,21 @@
-kubeProxy:
+kubeProxyReplacement: true
+k8sServiceHost: "${CLUSTER_NAME}-control-plane"
+k8sServicePort: 6443
+
+hubble:
   enabled: true
+  ui:
+    enabled: true
+    ingress:
+      enabled: true
+      className: nginx
+      hosts:
+        - hubble.${DOMAIN}
+      tls:
+        - hosts:
+            - hubble.${DOMAIN}
+          secretName: hubble-ui-tls
+      annotations:
+        cert-manager.io/cluster-issuer: ${CLUSTER_ISSUER_NAME}
+  relay:
+    enabled: true

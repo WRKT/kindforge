@@ -59,7 +59,7 @@ velero-clean: ## Uninstall Velero and MinIO
 lint: ## Lint shell scripts (requires shellcheck)
 	@if command -v shellcheck >/dev/null 2>&1; then \
 	  echo "[+] Running shellcheck..."; \
-	  shellcheck -x $(SCRIPTS_DIR)/*.sh $(CERTS_DIR)/install.sh; \
+	  shellcheck -x $(SCRIPTS_DIR)/*.sh $(CERTS_DIR)/install.sh && echo "[OK] shellcheck passed."; \
 	else \
 	  echo "[WARN] shellcheck not found. Install it to lint scripts (e.g., apt install -y shellcheck)"; \
 	fi

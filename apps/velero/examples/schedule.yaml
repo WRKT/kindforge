@@ -1,0 +1,9 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: kindforge-cl01-full-backup
+spec:
+  schedule: '@every 1h'
+  template:
+    includedNamespaces:
+    - "*"

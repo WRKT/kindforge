@@ -105,7 +105,7 @@ wait_for_ingress_nginx_controller() {
   log "Waiting for Ingress-NGINX controller..."
   
   # Retry loop to wait for resource to exist before waiting for condition
-  for i in {1..10}; do
+  for _ in {1..10}; do
     if kubectl -n ingress-nginx get deployment ingress-nginx-controller >/dev/null 2>&1; then
         kubectl -n ingress-nginx wait --for=condition=Available deployment/ingress-nginx-controller --timeout=300s
         return

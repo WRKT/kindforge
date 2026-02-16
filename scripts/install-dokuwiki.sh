@@ -6,8 +6,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "[+] Installing DokuWiki"
 
-# Add Bitnami repo
-helm repo add bitnami https://charts.bitnami.com/bitnami >/dev/null 2>&1 || true
+helm repo add area-42 https://area-42.github.io/helm-charts >/dev/null 2>&1 || true
 helm repo update >/dev/null 2>&1 || true
 
 if command -v envsubst >/dev/null 2>&1; then
@@ -19,7 +18,7 @@ if command -v envsubst >/dev/null 2>&1; then
     fi
     set +a
 
-    envsubst < "$REPO_ROOT/apps/dokuwiki/values.yaml" | helm upgrade --install dokuwiki bitnami/dokuwiki \
+    envsubst < "$REPO_ROOT/apps/dokuwiki/values.yaml" | helm upgrade --install dokuwiki area-42/dokuwiki \
         --namespace dokuwiki \
         --create-namespace \
         -f -
@@ -32,4 +31,3 @@ echo "[+] Waiting for DokuWiki to be ready..."
 kubectl rollout status deployment/dokuwiki -n dokuwiki --timeout=300s
 
 echo "[OK] DokuWiki installed."
-echo "Access it at: https://dokuwiki.${DOMAIN}"

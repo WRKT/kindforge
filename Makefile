@@ -4,6 +4,7 @@ SCRIPTS_DIR := scripts
 CERTS_DIR := certs
 DEFAULTS_DIR := defaults
 CLUSTER_DIR := cluster
+APPS_DIR := apps
 
 .DEFAULT_GOAL := install
 

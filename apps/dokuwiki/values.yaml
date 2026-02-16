@@ -1,0 +1,33 @@
+global:
+  storageClass: standard
+
+ingress:
+  enabled: true
+  hostname: dokuwiki.${DOMAIN}
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: ${CLUSTER_ISSUER_NAME}
+  tls: true
+  extraTls:
+    - hosts:
+        - dokuwiki.${DOMAIN}
+      secretName: dokuwiki-tls
+
+persistence:
+  enabled: true
+  size: 1Gi
+  accessModes:
+    - ReadWriteOnce
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 250m
+    memory: 512Mi
+
+dokuwiki:
+  username: user
+  password: password
+  email: user@example.com

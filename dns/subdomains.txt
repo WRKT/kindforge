@@ -5,3 +5,4 @@ gitlab
 minio
 registry
 kas
+dokuwiki

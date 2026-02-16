@@ -7,3 +7,4 @@ spec:
   template:
     includedNamespaces:
     - "*"
+    ttl: 720h0m0s

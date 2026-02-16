@@ -1,0 +1,10 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  generateName: kindforge-cl01-manual-
+  labels:
+    velero.io/schedule-name: kindforge-cl01-full-backup
+spec:
+  includedNamespaces:
+  - "*"
+  ttl: 720h0m0s

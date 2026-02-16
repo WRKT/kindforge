@@ -4,6 +4,7 @@ metadata:
   generateName: kindforge-cl01-manual-
   labels:
     velero.io/schedule-name: kindforge-cl01-full-backup
+  namespace: velero
 spec:
   includedNamespaces:
   - "*"

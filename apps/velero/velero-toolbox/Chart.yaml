@@ -1,0 +1,6 @@
+apiVersion: v2
+name: velero-toolbox
+description: A Helm chart to deploy Velero CLI as a toolbox pod
+type: application
+version: 0.1.0
+appVersion: "1.16.1"

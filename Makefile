@@ -4,7 +4,6 @@ SCRIPTS_DIR := scripts
 CERTS_DIR := certs
 DEFAULTS_DIR := defaults
 CLUSTER_DIR := cluster
-TOOLS_DIR := tools
 
 .DEFAULT_GOAL := install
 
@@ -44,6 +43,9 @@ velero: ## Install Velero server
 
 argocd: ## Install ArgoCD
 	@$(SCRIPTS_DIR)/install-argocd.sh
+
+dokuwiki: ## Install DokuWiki
+	@$(SCRIPTS_DIR)/install-dokuwiki.sh
 
 monitoring: ## Install Prometheus and Grafana monitoring stack
 	@$(SCRIPTS_DIR)/install-monitoring.sh

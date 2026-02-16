@@ -10,7 +10,7 @@ helm repo update >/dev/null 2>&1 || true
 helm upgrade --install argocd argo/argo-cd \
   --namespace argocd \
   --create-namespace \
-  -f "$REPO_ROOT/tools/argocd/values.yaml"
+  -f "$REPO_ROOT/apps/argocd/values.yaml"
 
 echo "[+] Waiting for ArgoCD server to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s

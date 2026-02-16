@@ -15,7 +15,7 @@ helm repo add --force-update gitlab https://charts.gitlab.io/ >/dev/null 2>&1 ||
 helm repo update >/dev/null 2>&1 || true
 
 if command -v envsubst >/dev/null 2>&1; then
-  envsubst < "$REPO_ROOT/tools/gitlab/values.yaml" | helm upgrade --install gitlab gitlab/gitlab \
+  envsubst < "$REPO_ROOT/apps/gitlab/values.yaml" | helm upgrade --install gitlab gitlab/gitlab \
     --namespace gitlab \
     --create-namespace \
     --timeout 900s \
@@ -25,5 +25,5 @@ else
     --namespace gitlab \
     --create-namespace \
     --timeout 900s \
-    -f "$REPO_ROOT/tools/gitlab/values.yaml"
+    -f "$REPO_ROOT/apps/gitlab/values.yaml"
 fi

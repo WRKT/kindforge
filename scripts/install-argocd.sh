@@ -15,6 +15,9 @@ helm upgrade --install argocd argo/argo-cd \
 echo "[+] Waiting for ArgoCD server to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
 
+echo "[+] Bootstrapping GitOps Applications..."
+kubectl apply -f "$REPO_ROOT/apps/argocd/bootstrap-apps.yaml" -n argocd || echo "[WARN] Failed to apply bootstrap apps. Check if CRDs are ready."
+
 echo "[OK] ArgoCD installed successfully!"
 echo "Access ArgoCD UI at: https://argocd.kindforge-cl01.io"
 echo ""

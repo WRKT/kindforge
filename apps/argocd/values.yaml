@@ -61,6 +61,8 @@ notifications:
   enabled: false
 
 configs:
+  cm:
+    timeout.reconciliation: "60s"
   params:
     # Disable TLS on server. Handled by Ingress
     server.insecure: true

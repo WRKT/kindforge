@@ -1,2 +1,7 @@
 replicaCount: 1
 version: "1.16.1"
+
+image:
+  repository: "harbor.agc.dpk-agc-cl04.agoracalyce.net/velero/velero-toolbox"
+  tag: ""
+  pullPolicy: Always

@@ -52,6 +52,7 @@ monitoring: ## Install Prometheus and Grafana monitoring stack
 	@$(SCRIPTS_DIR)/install-monitoring.sh
 
 velero-clean: ## Uninstall Velero and MinIO
+	@helm uninstall velero-toolbox -n velero || true
 	@helm uninstall velero -n velero || true
 	@helm uninstall minio -n minio || true
 	@kubectl delete pvc --all -n minio || true

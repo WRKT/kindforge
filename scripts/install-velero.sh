@@ -19,3 +19,9 @@ helm upgrade --install velero vmware-tanzu/velero \
   --namespace velero \
   --create-namespace \
   -f "$REPO_ROOT/apps/velero/values.yaml"
+
+echo "[+] Installing Velero Toolbox via Helm (local chart)"
+helm upgrade --install velero-toolbox "$REPO_ROOT/apps/velero/toolbox/charts" \
+  --namespace velero \
+  --create-namespace \
+  -f "$REPO_ROOT/apps/velero/toolbox/charts/values.yaml"

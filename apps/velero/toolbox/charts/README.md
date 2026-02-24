@@ -1,4 +1,4 @@
-# Velero Toolbox
+# Velero Toolbox Chart
 
 A simple Helm chart to deploy a Velero CLI toolbox pod. Use this pod to interact with your Velero installation without installing the CLI locally.
 

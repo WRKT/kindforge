@@ -8,7 +8,7 @@ APPS_DIR := apps
 
 .DEFAULT_GOAL := install
 
-.PHONY: help gitlab velero argocd prepare check bootstrap delete tls monitoring velero-clean lint print-config
+.PHONY: help gitlab velero argocd prepare check bootstrap destroy tls monitoring velero-clean lint print-config
 help:
 	@echo "Usage: make <target>"
 	@echo ""

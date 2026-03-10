@@ -19,9 +19,12 @@ cp "$(mkcert -CAROOT)/rootCA-key.pem" certs/rootCA-key.pem
 chmod 600 certs/rootCA-key.pem
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  echo "[+] Adding CA to system trust store"
+  echo "[+] Adding CA to system trust store (Linux)"
   sudo cp certs/rootCA.pem /usr/local/share/ca-certificates/mkcert-ca.crt
   sudo update-ca-certificates
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  echo "[+] Adding CA to system trust store (macOS)"
+  sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/rootCA.pem
 fi
 
 echo "[OK] Certificates are generated successfully"

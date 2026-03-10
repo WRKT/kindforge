@@ -4,10 +4,12 @@ ARG VELERO_VERSION=1.14.1
 
 RUN apk add --no-cache curl bash bash-completion
 
+ARG TARGETARCH
+
 RUN set -e && \
-    DOWNLOAD_URL="https://github.com/vmware-tanzu/velero/releases/download/v${VELERO_VERSION}/velero-v${VELERO_VERSION}-linux-amd64.tar.gz" && \
+    DOWNLOAD_URL="https://github.com/vmware-tanzu/velero/releases/download/v${VELERO_VERSION}/velero-v${VELERO_VERSION}-linux-${TARGETARCH}.tar.gz" && \
     curl -L "${DOWNLOAD_URL}" | tar -xz -C /tmp && \
-    mv "/tmp/velero-v${VELERO_VERSION}-linux-amd64/velero" /usr/local/bin/velero && \
+    mv "/tmp/velero-v${VELERO_VERSION}-linux-${TARGETARCH}/velero" /usr/local/bin/velero && \
     chmod +x /usr/local/bin/velero && \
     rm -rf /tmp/velero-*
 
